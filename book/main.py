@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Header
 from typing import Optional 
 from pydantic import BaseModel
 
@@ -38,3 +38,21 @@ async def create_book(book_data:BookCreateModel):
         "title": book_data.title,
         "author": book_data.author
     }
+
+# Headers
+
+@app.get('/get_headers', status_code=200)
+async def get_headers(
+    accept: str = Header(None),
+    content_type: str = Header(None),
+    user_agent: str = Header(None),
+    host: str = Header(None)
+):
+    request_headers = {}
+
+    request_headers['ACCEPT'] = accept
+    request_headers['CONTENT_TYPE'] = content_type
+    request_headers['USER_AGENT'] = user_agent
+    request_headers['HOST'] = host
+
+    return request_headers
