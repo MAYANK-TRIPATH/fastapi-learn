@@ -71,6 +71,13 @@ class Book(BaseModel):
         page_count: int
         language: str
 
+class BookUpdateModel(BaseModel):
+        title: str
+        author: str
+        publisher: str
+        page_count: int
+        language: str        
+
 
 @app.get('/books', response_model=List[Book])
 async def get_all_books():
@@ -94,3 +101,20 @@ async def get_book(book_id:int) -> dict:
           if book["id"] == book_id:
                 return book
           raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not founnd")
+
+
+# Update DB -> PATCH
+
+@app.patch('book/{}')
+async def update_book(book_id: int, update_book_data: BookUpdateModel) -> dict:
+
+    for book in books:
+          if book['id'] == book_id:
+                book['title'] == update_book_data.title
+                book['publisher'] == update_book_data.publisher
+                book['page_count'] == update_book_data.page_count
+                book['language'] == update_book_data.language
+
+                return book
+          
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not patch found")
